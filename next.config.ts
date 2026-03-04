@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://api.tzevaadom.co.il https://overpass-api.de",
+              "connect-src 'self' https://api.tzevaadom.co.il https://overpass-api.de https://gisn.tel-aviv.gov.il https://opendata.haifa.muni.il https://jerusalem.datacity.org.il https://data.gov.il",
               "worker-src 'self'",
               "object-src 'none'",
               "base-uri 'self'",

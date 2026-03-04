@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getShelters } from "@/lib/sheltersCache";
+import { getShelters, isInCoverageArea } from "@/lib/sheltersCache";
 import { findNearestShelters } from "@/lib/geo";
 
 export async function GET(request: NextRequest) {
@@ -17,9 +17,11 @@ export async function GET(request: NextRequest) {
 
   const shelters = await getShelters();
   const nearest = findNearestShelters({ lat, lng }, shelters, limit);
+  const coverage = isInCoverageArea(lat, lng);
 
   return NextResponse.json({
     total: shelters.length,
     nearest,
+    coverage,
   });
 }

@@ -15,7 +15,7 @@ import InstallPrompt from "@/components/InstallPrompt";
 import ScrollReveal from "@/components/ScrollReveal";
 import { ProcessedAlert, SafetyStats, SafetyRecommendation, NearestShelter as NearestShelterType } from "@/lib/types";
 import { computeStats, getWalkRecommendation } from "@/lib/safety";
-import { filterAlertsByRegion } from "@/lib/regions";
+import { filterAlertsByRegion, detectRegionFromCoordinates, regions } from "@/lib/regions";
 import { useGeolocation } from "@/hooks/useGeolocation";
 
 const REFRESH_INTERVAL = 30_000;
@@ -29,6 +29,8 @@ export default function Home() {
   const [selectedRegion, setSelectedRegion] = useState("all");
   const [nearbyShelters, setNearbyShelters] = useState<NearestShelterType[]>([]);
   const [sheltersLoading, setSheltersLoading] = useState(false);
+  const [shelterCoverage, setShelterCoverage] = useState<{ covered: boolean; area?: string } | null>(null);
+  const [regionAutoDetected, setRegionAutoDetected] = useState(false);
 
   const { location, loading: geoLoading, error: geoError, requestLocation } = useGeolocation();
 
@@ -42,6 +44,16 @@ export default function Home() {
     localStorage.setItem("bwt-region", selectedRegion);
   }, [selectedRegion]);
 
+  // Auto-detect region from geolocation
+  useEffect(() => {
+    if (!location) return;
+    const detected = detectRegionFromCoordinates(location.lat, location.lng);
+    if (detected !== "all") {
+      setSelectedRegion(detected);
+      setRegionAutoDetected(true);
+    }
+  }, [location]);
+
   // Fetch nearby shelters when location changes
   useEffect(() => {
     if (!location) return;
@@ -51,6 +63,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         setNearbyShelters(data.nearest || []);
+        setShelterCoverage(data.coverage || null);
       })
       .catch(() => {
         setNearbyShelters([]);
@@ -59,6 +72,15 @@ export default function Home() {
         setSheltersLoading(false);
       });
   }, [location]);
+
+  const handleRegionChange = useCallback((regionId: string) => {
+    setSelectedRegion(regionId);
+    setRegionAutoDetected(false);
+  }, []);
+
+  const detectedRegionName = regionAutoDetected
+    ? regions.find((r) => r.id === selectedRegion)?.nameEn ?? null
+    : null;
 
   // Filter alerts by selected region
   const filteredAlerts = useMemo(() => {
@@ -115,13 +137,15 @@ export default function Home() {
               loading={geoLoading}
               error={geoError}
               onLocate={requestLocation}
+              detectedRegion={detectedRegionName}
             />
           </ScrollReveal>
-          {(nearbyShelters.length > 0 || sheltersLoading) && (
+          {(nearbyShelters.length > 0 || sheltersLoading || shelterCoverage) && (
             <ScrollReveal delay={100}>
               <NearestShelters
                 shelters={nearbyShelters}
                 loading={sheltersLoading}
+                coverage={shelterCoverage}
               />
             </ScrollReveal>
           )}
@@ -131,7 +155,8 @@ export default function Home() {
           <ScrollReveal direction="right" delay={100}>
             <LocationSelector
               selectedRegion={selectedRegion}
-              onRegionChange={setSelectedRegion}
+              onRegionChange={handleRegionChange}
+              autoDetected={regionAutoDetected}
             />
           </ScrollReveal>
           <ScrollReveal delay={150} className="w-full">

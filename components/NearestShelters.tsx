@@ -8,9 +8,10 @@ import { formatDistance } from "@/lib/geo";
 interface Props {
   shelters: NearestShelter[];
   loading: boolean;
+  coverage?: { covered: boolean; area?: string } | null;
 }
 
-export default function NearestShelters({ shelters, loading }: Props) {
+export default function NearestShelters({ shelters, loading, coverage }: Props) {
   const { lang } = useLanguage();
 
   if (loading) {
@@ -86,6 +87,11 @@ export default function NearestShelters({ shelters, loading }: Props) {
             </a>
           ))}
         </div>
+        {coverage && !coverage.covered && (
+          <p className="font-mono text-xs text-cream/30 text-center mt-3 leading-relaxed">
+            {t(lang, "shelterLimitedCoverage")}
+          </p>
+        )}
       </div>
     </section>
   );
