@@ -134,8 +134,28 @@ export function getWalkRecommendation(
   walkDuration: number,
   nearestShelter: NearestShelter | null
 ): SafetyRecommendation {
-  const walkScore = computeWalkScore(stats.safetyScore, nearestShelter);
-  const { timeSinceLastAlert } = stats;
+  const baseWalkScore = computeWalkScore(stats.safetyScore, nearestShelter);
+  const { timeSinceLastAlert, averageGap } = stats;
+
+  // Duration scaling: longer walks = more exposure = lower effective score
+  // 5 min walk: 1.0x (no penalty), 30 min: ~0.85x, 60 min: ~0.7x
+  const durationPenalty = 1 - (walkDuration - 5) * 0.005; // 5min=1.0, 60min=0.725
+  const durationFactor = Math.max(0.7, Math.min(1.0, durationPenalty));
+
+  // Time-safety ratio: how many times your walk fits in the gap since last alert
+  // Higher = safer. A 5min walk with 2h gap = 24x. A 60min walk = 2x.
+  const timeRatio = timeSinceLastAlert / Math.max(walkDuration, 1);
+
+  // Also factor in average gap — if avg gap between alerts is shorter than your
+  // walk, that's risky even if the last alert was a while ago
+  const gapRatio = averageGap === Infinity ? 10 : averageGap / Math.max(walkDuration, 1);
+
+  // Combine: base score adjusted by duration, time ratio, and gap ratio
+  const timeBonus = Math.min(15, (timeRatio - 1) * 3); // up to +15 for large gaps
+  const gapBonus = Math.min(10, (gapRatio - 1) * 5);   // up to +10 for large avg gaps
+  const walkScore = Math.round(
+    Math.max(0, Math.min(100, baseWalkScore * durationFactor + timeBonus + gapBonus))
+  );
 
   const hasShelterData = nearestShelter && nearestShelter.distanceM < 5000;
   const shelterNearby = nearestShelter && nearestShelter.distanceM < 500;
@@ -147,13 +167,13 @@ export function getWalkRecommendation(
     level = "dangerous";
   } else if (
     walkScore > 70 &&
-    timeSinceLastAlert > walkDuration * 2 &&
+    timeRatio > 4 &&
     (!hasShelterData || shelterNearby)
   ) {
     level = "safe";
   } else if (
     walkScore > 55 &&
-    timeSinceLastAlert > walkDuration * 1.5 &&
+    timeRatio > 2 &&
     (!hasShelterData || shelterReachable)
   ) {
     level = "risky";
