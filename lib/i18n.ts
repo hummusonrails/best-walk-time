@@ -1,0 +1,96 @@
+import { Language } from "./types";
+
+const translations = {
+  en: {
+    appName: "Best Walk Time",
+    appNameSub: "הזמן הטוב לטיול",
+    minutes: "min",
+    timeSinceLastAlert: "Time Since Last Alert",
+    averageGap: "Average Gap (6h)",
+    alertCount: "Alerts (24h)",
+    trendLabel: "Trend",
+    increasing: "Increasing",
+    decreasing: "Decreasing",
+    stable: "Stable",
+    safetyScore: "Safety Score",
+    timeline: "24-Hour Alert Timeline",
+    howItWorks: "How It Works",
+    howItWorksContent:
+      "This app analyzes real-time rocket alert data from Pikud HaOref combined with public bomb shelter locations to estimate the safest times for a walk. The safety score factors in time since the last alert, alert frequency trends, and your distance to the nearest public shelter.",
+    disclaimer:
+      "This is not a substitute for Pikud HaOref guidelines. Always follow official instructions.",
+    dataSource: "Alert data: Tzeva Adom / Pikud HaOref — Shelter data: OpenStreetMap",
+    lastUpdated: "Last updated",
+    autoRefresh: "Auto-refreshes every 30s",
+    noAlerts: "No recent alerts",
+    walkDuration: "Walk Duration",
+    now: "Now",
+    alerts: "alerts",
+    location: "Your Location",
+    locateMe: "Locate me",
+    locating: "Locating...",
+    locationError: "Could not get location",
+    locationDenied: "Location access denied. Enable it in browser settings.",
+    nearestShelter: "Nearest Shelter",
+    shelters: "Nearby Shelters",
+    noShelters: "No shelter data available",
+    loadingShelters: "Loading shelters...",
+    walkTime: "walk",
+    searchCity: "Search city...",
+    region: "Region",
+    installCTAiOS: "Tap {icon} then \"Add to Home Screen\" — always one tap away",
+    installCTAAndroid: "Tap \u22EE then \"Install App\" — always one tap away",
+    installCTADesktop: "Install on your phone — always one tap away from a safety check",
+    installButton: "Install App",
+  },
+  he: {
+    appName: "הזמן הטוב לטיול",
+    appNameSub: "Best Walk Time",
+    minutes: "דק׳",
+    timeSinceLastAlert: "זמן מאז ההתרעה האחרונה",
+    averageGap: "מרווח ממוצע (6 שעות)",
+    alertCount: "התרעות (24 שעות)",
+    trendLabel: "מגמה",
+    increasing: "עולה",
+    decreasing: "יורדת",
+    stable: "יציבה",
+    safetyScore: "ציון בטיחות",
+    timeline: "ציר זמן התרעות — 24 שעות",
+    howItWorks: "איך זה עובד",
+    howItWorksContent:
+      "האפליקציה מנתחת נתוני התרעות בזמן אמת מפיקוד העורף בשילוב מיקומי מקלטים ציבוריים כדי להעריך את הזמנים הבטוחים ביותר לטיול. ציון הבטיחות מבוסס על הזמן מאז ההתרעה האחרונה, מגמות תדירות, והמרחק שלך מהמקלט הציבורי הקרוב.",
+    disclaimer:
+      "אפליקציה זו אינה תחליף להנחיות פיקוד העורף. פעלו תמיד לפי ההוראות הרשמיות.",
+    dataSource: "נתוני התרעות: צבע אדום / פיקוד העורף — מקלטים: OpenStreetMap",
+    lastUpdated: "עודכן לאחרונה",
+    autoRefresh: "מתרענן אוטומטית כל 30 שניות",
+    noAlerts: "אין התרעות אחרונות",
+    walkDuration: "משך הטיול",
+    now: "עכשיו",
+    alerts: "התרעות",
+    location: "המיקום שלך",
+    locateMe: "אתר אותי",
+    locating: "מאתר...",
+    locationError: "לא ניתן לקבל מיקום",
+    locationDenied: "הגישה למיקום נחסמה. הפעילו בהגדרות הדפדפן.",
+    nearestShelter: "מקלט קרוב",
+    shelters: "מקלטים בסביבה",
+    noShelters: "אין נתוני מקלטים",
+    loadingShelters: "טוען מקלטים...",
+    walkTime: "הליכה",
+    searchCity: "חפש עיר...",
+    region: "אזור",
+    installCTAiOS: "לחצו על {icon} ואז \"הוסף למסך הבית\" — תמיד במרחק נגיעה",
+    installCTAAndroid: "לחצו על \u22EE ואז \"התקן אפליקציה\" — תמיד במרחק נגיעה",
+    installCTADesktop: "התקינו בטלפון — תמיד במרחק נגיעה מבדיקת בטיחות",
+    installButton: "התקן אפליקציה",
+  },
+} as const;
+
+export type TranslationKey = keyof (typeof translations)["en"];
+
+export function t(lang: Language, key: TranslationKey): string {
+  return translations[lang][key];
+}
+
+export default translations;

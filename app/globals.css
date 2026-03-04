@@ -1,26 +1,111 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-cream: #FFEEC8;
+  --color-bg: #1E1E1C;
+  --color-surface-1: #252523;
+  --color-surface-2: #2C2C29;
+  --color-divider: rgba(255, 238, 200, 0.08);
+  --color-safety: #4ADE80;
+  --color-warning: #FBBF24;
+  --color-danger: #EF4444;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --ease-smooth: cubic-bezier(0.75, 0, 0.25, 1);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hidden scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+/* Range slider */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: rgba(255, 238, 200, 0.15);
+  border-radius: 1px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFEEC8;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.75, 0, 0.25, 1);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFEEC8;
+  cursor: pointer;
+  border: none;
+}
+
+/* Loading pulse */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.75, 0, 0.25, 1) infinite;
+}
+
+/* Surface card utility */
+.card {
+  background: var(--color-surface-1);
+  border-radius: 12px;
+}
+
+/* Gauge entrance animation */
+@keyframes gauge-enter {
+  from {
+    transform: scale(0.85) rotate(-10deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.gauge-entrance {
+  animation: gauge-enter 1s cubic-bezier(0.75, 0, 0.25, 1) forwards;
+}
+
+/* Character-by-character reveal */
+@keyframes char-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -1,65 +1,154 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect, useCallback, useMemo } from "react";
+import Header from "@/components/Header";
+import SafetyVerdict from "@/components/SafetyVerdict";
+import WalkSettings from "@/components/WalkSettings";
+import LocationDisplay from "@/components/LocationDisplay";
+import NearestShelters from "@/components/NearestShelters";
+import LocationSelector from "@/components/LocationSelector";
+import StatsGrid from "@/components/StatsGrid";
+import AlertTimeline from "@/components/AlertTimeline";
+import HowItWorks from "@/components/HowItWorks";
+import Footer from "@/components/Footer";
+import InstallPrompt from "@/components/InstallPrompt";
+import ScrollReveal from "@/components/ScrollReveal";
+import { ProcessedAlert, SafetyStats, SafetyRecommendation, NearestShelter as NearestShelterType } from "@/lib/types";
+import { computeStats, getWalkRecommendation } from "@/lib/safety";
+import { filterAlertsByRegion } from "@/lib/regions";
+import { useGeolocation } from "@/hooks/useGeolocation";
+
+const REFRESH_INTERVAL = 30_000;
 
 export default function Home() {
+  const [alerts, setAlerts] = useState<ProcessedAlert[]>([]);
+  const [stats, setStats] = useState<SafetyStats | null>(null);
+  const [recommendation, setRecommendation] = useState<SafetyRecommendation | null>(null);
+  const [duration, setDuration] = useState(15);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState("all");
+  const [nearbyShelters, setNearbyShelters] = useState<NearestShelterType[]>([]);
+  const [sheltersLoading, setSheltersLoading] = useState(false);
+
+  const { location, loading: geoLoading, error: geoError, requestLocation } = useGeolocation();
+
+  // Persist region in localStorage
+  useEffect(() => {
+    const savedRegion = localStorage.getItem("bwt-region");
+    if (savedRegion) setSelectedRegion(savedRegion);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("bwt-region", selectedRegion);
+  }, [selectedRegion]);
+
+  // Fetch nearby shelters when location changes
+  useEffect(() => {
+    if (!location) return;
+
+    setSheltersLoading(true);
+    fetch(`/api/shelters?lat=${location.lat}&lng=${location.lng}&limit=5`)
+      .then((res) => res.json())
+      .then((data) => {
+        setNearbyShelters(data.nearest || []);
+      })
+      .catch(() => {
+        setNearbyShelters([]);
+      })
+      .finally(() => {
+        setSheltersLoading(false);
+      });
+  }, [location]);
+
+  // Filter alerts by selected region
+  const filteredAlerts = useMemo(() => {
+    return alerts.filter((a) => filterAlertsByRegion(a.cities, selectedRegion));
+  }, [alerts, selectedRegion]);
+
+  const fetchAlerts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/alerts");
+      const data: ProcessedAlert[] = await res.json();
+      setAlerts(data);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error("Failed to fetch alerts:", error);
+    }
+  }, []);
+
+  // Initial fetch + polling
+  useEffect(() => {
+    fetchAlerts();
+    const interval = setInterval(fetchAlerts, REFRESH_INTERVAL);
+    return () => clearInterval(interval);
+  }, [fetchAlerts]);
+
+  // Recompute stats when filtered alerts, duration, or shelters change
+  useEffect(() => {
+    const newStats = computeStats(filteredAlerts);
+    setStats(newStats);
+
+    const nearestShelter = nearbyShelters.length > 0 ? nearbyShelters[0] : null;
+    setRecommendation(getWalkRecommendation(newStats, duration, nearestShelter));
+  }, [filteredAlerts, duration, nearbyShelters]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div className="min-h-screen flex flex-col items-center">
+      <div className="w-full max-w-xl">
+        <ScrollReveal direction="down">
+          <Header />
+        </ScrollReveal>
+
+        <main className="flex flex-col items-center gap-10 pb-10">
+          <ScrollReveal>
+            <SafetyVerdict recommendation={recommendation} />
+          </ScrollReveal>
+          <ScrollReveal direction="left" delay={100}>
+            <WalkSettings
+              duration={duration}
+              onDurationChange={setDuration}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+          </ScrollReveal>
+          <ScrollReveal direction="right" delay={50}>
+            <LocationDisplay
+              location={location}
+              loading={geoLoading}
+              error={geoError}
+              onLocate={requestLocation}
+            />
+          </ScrollReveal>
+          {(nearbyShelters.length > 0 || sheltersLoading) && (
+            <ScrollReveal delay={100}>
+              <NearestShelters
+                shelters={nearbyShelters}
+                loading={sheltersLoading}
+              />
+            </ScrollReveal>
+          )}
+          <ScrollReveal direction="right" delay={50}>
+            <InstallPrompt />
+          </ScrollReveal>
+          <ScrollReveal direction="right" delay={100}>
+            <LocationSelector
+              selectedRegion={selectedRegion}
+              onRegionChange={setSelectedRegion}
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={150} className="w-full">
+            <StatsGrid stats={stats} />
+          </ScrollReveal>
+          <ScrollReveal delay={100} className="w-full">
+            <AlertTimeline alerts={filteredAlerts} />
+          </ScrollReveal>
+          <ScrollReveal>
+            <HowItWorks />
+          </ScrollReveal>
+        </main>
+
+        <ScrollReveal>
+          <Footer lastUpdated={lastUpdated} />
+        </ScrollReveal>
+      </div>
     </div>
   );
 }
