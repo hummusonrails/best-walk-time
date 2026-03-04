@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, JetBrains_Mono, Inter } from "next/font/google";
 import { LanguageProvider } from "@/lib/LanguageContext";
+import Script from "next/script";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import "./globals.css";
 
@@ -116,6 +117,11 @@ export default function RootLayout({
       >
         <LanguageProvider>{children}</LanguageProvider>
         <ServiceWorkerRegistration />
+        <Script
+          data-goatcounter="https://bestwalkingtime.goatcounter.com/count"
+          src="//gc.zgo.at/count.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
