@@ -25,7 +25,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bestwalktime.com"),
+  metadataBase: new URL("https://bestwalkingtime.com"),
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     siteName: "Best Walk Time",
     locale: "en_US",
     type: "website",
-    url: "https://bestwalktime.com",
+    url: "https://bestwalkingtime.com",
   },
   twitter: {
     card: "summary_large_image",

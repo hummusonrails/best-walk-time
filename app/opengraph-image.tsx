@@ -55,7 +55,7 @@ export default async function Image() {
             boxShadow: "0 0 40px rgba(74,222,128,0.15)",
             marginBottom: 20,
           }}>
-            <div style={{ fontSize: 42, fontFamily: "monospace", fontWeight: 700, color: "#4ADE80", display: "flex" }}>82</div>
+            <div style={{ fontSize: 42, fontFamily: "monospace", fontWeight: 700, color: "#4ADE80", display: "flex" }}>78</div>
             <div style={{ fontSize: 10, fontFamily: "monospace", color: "rgba(255,238,200,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "flex" }}>SCORE</div>
           </div>
           {/* Verdict with bracket frame */}
@@ -68,7 +68,7 @@ export default async function Image() {
             <div style={{ position: "absolute", top: 0, left: 0, width: 10, height: 10, borderTop: "1px solid rgba(255,238,200,0.25)", borderLeft: "1px solid rgba(255,238,200,0.25)", display: "flex" }} />
             <div style={{ position: "absolute", bottom: 0, right: 0, width: 10, height: 10, borderBottom: "1px solid rgba(255,238,200,0.25)", borderRight: "1px solid rgba(255,238,200,0.25)", display: "flex" }} />
             <div style={{ fontSize: 32, fontStyle: "italic", fontFamily: "Georgia, serif", color: "#4ADE80", display: "flex" }}>
-              NOW IS A GOOD TIME
+              GOOD TIME FOR A WALK
             </div>
           </div>
         </div>
@@ -76,10 +76,10 @@ export default async function Image() {
         {/* Stats row */}
         <div style={{ display: "flex", gap: 16, justifyContent: "center", marginBottom: 24 }}>
           {[
-            { label: "LAST ALERT", value: "47 min" },
-            { label: "AVG GAP", value: "32 min" },
-            { label: "24H ALERTS", value: "12" },
-            { label: "TREND", value: "Stable" },
+            { label: "LAST ALERT", value: "1h 42m" },
+            { label: "AVG GAP", value: "38 min" },
+            { label: "WALK", value: "15 min" },
+            { label: "SHELTER", value: "320m" },
           ].map((stat) => (
             <div
               key={stat.label}
@@ -103,7 +103,7 @@ export default async function Image() {
         {/* URL footer */}
         <div style={{ display: "flex", justifyContent: "center", marginTop: "auto" }}>
           <div style={{ fontSize: 14, fontFamily: "monospace", color: "rgba(255,238,200,0.25)", display: "flex" }}>
-            bestwalktime.com
+            bestwalkingtime.com
           </div>
         </div>
       </div>
