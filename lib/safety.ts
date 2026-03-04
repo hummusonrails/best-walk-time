@@ -102,21 +102,28 @@ export function computeWalkScore(
   nearestShelter: NearestShelter | null
 ): number {
   if (!nearestShelter) {
-    // No shelter data — penalize heavily
-    return Math.round(baseScore * 0.5);
+    // No shelter data at all — use alert score only with small penalty
+    return Math.round(baseScore * 0.9);
+  }
+
+  const d = nearestShelter.distanceM;
+
+  // If the nearest shelter is very far (>5km), shelter data is effectively
+  // unavailable for this location — fall back to alert-only scoring
+  if (d > 5000) {
+    return Math.round(baseScore * 0.9);
   }
 
   // Shelter proximity score (0-100)
   // < 200m (< 2.5 min walk): 100
   // 200-500m: 75
   // 500-1000m: 40
-  // > 1000m: 10
+  // 1000-5000m: scales 40→10
   let shelterScore: number;
-  const d = nearestShelter.distanceM;
   if (d < 200) shelterScore = 100;
   else if (d < 500) shelterScore = 100 - ((d - 200) / 300) * 25; // 100→75
   else if (d < 1000) shelterScore = 75 - ((d - 500) / 500) * 35; // 75→40
-  else shelterScore = Math.max(10, 40 - ((d - 1000) / 2000) * 30); // 40→10
+  else shelterScore = Math.max(10, 40 - ((d - 1000) / 4000) * 30); // 40→10
 
   // Weighted blend: 75% alert-based, 25% shelter proximity
   return Math.round(Math.max(0, Math.min(100, baseScore * 0.75 + shelterScore * 0.25)));
@@ -130,19 +137,28 @@ export function getWalkRecommendation(
   const walkScore = computeWalkScore(stats.safetyScore, nearestShelter);
   const { timeSinceLastAlert } = stats;
 
-  const shelterTooFar = !nearestShelter || nearestShelter.distanceM > 1000;
+  const hasShelterData = nearestShelter && nearestShelter.distanceM < 5000;
+  const shelterNearby = nearestShelter && nearestShelter.distanceM < 500;
+  const shelterReachable = nearestShelter && nearestShelter.distanceM < 1000;
 
   let level: SafetyLevel;
 
-  if (walkScore < 40 || timeSinceLastAlert < walkDuration || (shelterTooFar && walkScore < 60)) {
+  if (walkScore < 40 || timeSinceLastAlert < walkDuration) {
     level = "dangerous";
   } else if (
     walkScore > 70 &&
     timeSinceLastAlert > walkDuration * 2 &&
-    nearestShelter &&
-    nearestShelter.distanceM < 500
+    (!hasShelterData || shelterNearby)
   ) {
     level = "safe";
+  } else if (
+    walkScore > 55 &&
+    timeSinceLastAlert > walkDuration * 1.5 &&
+    (!hasShelterData || shelterReachable)
+  ) {
+    level = "risky";
+  } else if (walkScore < 55) {
+    level = "dangerous";
   } else {
     level = "risky";
   }
