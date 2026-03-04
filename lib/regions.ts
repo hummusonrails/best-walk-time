@@ -3,6 +3,7 @@ export interface Region {
   nameEn: string;
   nameHe: string;
   patterns: string[];
+  bounds?: { lat: [number, number]; lng: [number, number] };
 }
 
 export const regions: Region[] = [
@@ -22,6 +23,7 @@ export const regions: Region[] = [
       "בצת", "לימן", "מזרעה", "בוסתן הגליל", "רגבה", "כפר ורדים",
       "מעיליא", "ירכא", "ג'דיידה", "אבו סנאן", "יאנוח",
     ],
+    bounds: { lat: [32.85, 33.1], lng: [35.0, 35.35] },
   },
   {
     id: "upper-galilee",
@@ -33,6 +35,7 @@ export const regions: Region[] = [
       "אביבים", "יפתח", "דישון", "מרגליות", "אילון", "פרוד",
       "עמוקה", "ביריה", "כנף", "מירון",
     ],
+    bounds: { lat: [32.9, 33.33], lng: [35.35, 35.7] },
   },
   {
     id: "lower-galilee",
@@ -44,6 +47,7 @@ export const regions: Region[] = [
       "כפר כנא", "טורעאן", "עין מאהל", "ריינה", "כפר מנדא",
       "משהד", "יפיע", "דבורייה", "אכסאל",
     ],
+    bounds: { lat: [32.6, 32.9], lng: [35.15, 35.55] },
   },
   {
     id: "haifa",
@@ -54,6 +58,7 @@ export const regions: Region[] = [
       "קריית מוצקין", "קריית חיים", "קריית שמואל", "נשר",
       "טירת כרמל", "רכסים", "עוספיה", "דלית אל כרמל",
     ],
+    bounds: { lat: [32.7, 32.87], lng: [34.94, 35.15] },
   },
   {
     id: "jezreel",
@@ -64,6 +69,7 @@ export const regions: Region[] = [
       "מגידו", "רמת ישי", "אלון הגליל", "קריית טבעון",
       "כפר יהושע", "נהלל", "שדה יעקב", "מרחביה", "בלפוריה",
     ],
+    bounds: { lat: [32.4, 32.7], lng: [35.15, 35.55] },
   },
   {
     id: "golan",
@@ -74,6 +80,7 @@ export const regions: Region[] = [
       "בני יהודה", "גבעת יואב", "רמת מגשימים", "מבוא חמה",
       "נאות גולן", "אורטל", "אודם", "נמרוד",
     ],
+    bounds: { lat: [32.6, 33.33], lng: [35.6, 35.95] },
   },
   {
     id: "sharon",
@@ -85,6 +92,7 @@ export const regions: Region[] = [
       "תל מונד", "חדרה", "פרדס חנה", "כרכור", "זכרון יעקב",
       "בנימינה", "קיסריה", "אור עקיבא", "בית ברל",
     ],
+    bounds: { lat: [32.16, 32.55], lng: [34.75, 35.0] },
   },
   {
     id: "gush-dan",
@@ -95,6 +103,7 @@ export const regions: Region[] = [
       "חולון", "בת ים", "ראשון לציון", "גבעת שמואל",
       "אור יהודה", "קריית אונו", "יהוד", "סביון", "אזור",
     ],
+    bounds: { lat: [32.0, 32.16], lng: [34.73, 34.88] },
   },
   {
     id: "center",
@@ -105,6 +114,7 @@ export const regions: Region[] = [
       "יבנה", "גדרה", "בית שמש", "שוהם", "אלעד", "ראש העין",
       "פתח תקווה", "כפר קאסם", "טייבה", "קלנסוואה",
     ],
+    bounds: { lat: [31.8, 32.1], lng: [34.82, 35.1] },
   },
   {
     id: "jerusalem",
@@ -114,6 +124,7 @@ export const regions: Region[] = [
       "ירושלים", "מעלה אדומים", "גבעת זאב", "מבשרת ציון",
       "אבו גוש", "צור הדסה", "בית שמש", "מוצא",
     ],
+    bounds: { lat: [31.7, 31.87], lng: [35.1, 35.3] },
   },
   {
     id: "shfela",
@@ -123,6 +134,7 @@ export const regions: Region[] = [
       "אשדוד", "גן יבנה", "קריית גת", "קריית מלאכי",
       "גדרה", "יבנה", "בית קמה", "לכיש", "שדרות",
     ],
+    bounds: { lat: [31.55, 31.85], lng: [34.55, 34.85] },
   },
   {
     id: "south-coast",
@@ -132,6 +144,7 @@ export const regions: Region[] = [
       "אשקלון", "ניצנים", "זיקים", "כרמיה", "יד מרדכי",
       "ברנע", "מגדל", "בית שקמה",
     ],
+    bounds: { lat: [31.55, 31.7], lng: [34.5, 34.6] },
   },
   {
     id: "negev",
@@ -143,6 +156,7 @@ export const regions: Region[] = [
       "תל ערד", "ערערה בנגב", "לקיה", "חורה", "שגב שלום",
       "אבו תלול", "אבו קרינאת", "עומר", "מיתר", "להבים",
     ],
+    bounds: { lat: [30.6, 31.5], lng: [34.4, 35.3] },
   },
   {
     id: "gaza-envelope",
@@ -154,6 +168,7 @@ export const regions: Region[] = [
       "מפלסים", "אשכול", "בארי", "רעים", "אופקים",
       "נירים", "עלומים", "תקומה", "גבים", "דורות",
     ],
+    bounds: { lat: [31.2, 31.55], lng: [34.2, 34.6] },
   },
   {
     id: "eilat",
@@ -163,8 +178,21 @@ export const regions: Region[] = [
       "אילת", "יהל", "לוטן", "קטורה", "באר אורה",
       "שחרות", "אליפז", "נאות סמדר", "עין יהב", "ספיר",
     ],
+    bounds: { lat: [29.45, 30.6], lng: [34.9, 35.4] },
   },
 ];
+
+export function detectRegionFromCoordinates(lat: number, lng: number): string {
+  for (const region of regions) {
+    if (!region.bounds) continue;
+    const [latMin, latMax] = region.bounds.lat;
+    const [lngMin, lngMax] = region.bounds.lng;
+    if (lat >= latMin && lat <= latMax && lng >= lngMin && lng <= lngMax) {
+      return region.id;
+    }
+  }
+  return "all";
+}
 
 export function filterAlertsByRegion(
   cities: string[],

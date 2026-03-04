@@ -10,9 +10,10 @@ interface Props {
   loading: boolean;
   error: string | null;
   onLocate: () => void;
+  detectedRegion?: string | null;
 }
 
-export default function LocationDisplay({ location, loading, error, onLocate }: Props) {
+export default function LocationDisplay({ location, loading, error, onLocate, detectedRegion }: Props) {
   const { lang } = useLanguage();
   const { trigger } = useHaptics();
 
@@ -30,6 +31,11 @@ export default function LocationDisplay({ location, loading, error, onLocate }: 
               <span className="font-mono text-sm text-cream">
                 {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
               </span>
+              {detectedRegion && (
+                <span className="font-mono text-xs text-cream/40">
+                  · {detectedRegion}
+                </span>
+              )}
               {location.accuracy && (
                 <span className="font-mono text-xs text-cream/30">
                   ±{Math.round(location.accuracy)}m

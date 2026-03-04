@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="6" fill="#1E1E1C"/>
+  <!-- Walking person -->
+  <!-- Head -->
+  <circle cx="16" cy="6.5" r="2.5" fill="#FFEEC8"/>
+  <!-- Body -->
+  <line x1="16" y1="9" x2="16" y2="17" stroke="#FFEEC8" stroke-width="2" stroke-linecap="round"/>
+  <!-- Arms (swinging) -->
+  <line x1="16" y1="11" x2="12" y2="14.5" stroke="#FFEEC8" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="16" y1="11" x2="20.5" y2="13" stroke="#FFEEC8" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Legs (walking stride) -->
+  <line x1="16" y1="17" x2="12.5" y2="23" stroke="#FFEEC8" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="16" y1="17" x2="20" y2="22" stroke="#FFEEC8" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Feet -->
+  <line x1="12.5" y1="23" x2="11" y2="23.5" stroke="#FFEEC8" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="20" y1="22" x2="21.5" y2="22.5" stroke="#FFEEC8" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Ground dots (path) -->
+  <circle cx="7" cy="27" r="0.8" fill="#FFEEC8" opacity="0.3"/>
+  <circle cx="10" cy="27" r="0.8" fill="#FFEEC8" opacity="0.4"/>
+  <circle cx="16" cy="27" r="0.8" fill="#FFEEC8" opacity="0.5"/>
+  <circle cx="22" cy="27" r="0.8" fill="#FFEEC8" opacity="0.4"/>
+  <circle cx="25" cy="27" r="0.8" fill="#FFEEC8" opacity="0.3"/>
+</svg>
