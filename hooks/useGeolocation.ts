@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { UserLocation } from "@/lib/types";
+import { UserLocation } from "../lib/types";
 
 interface GeolocationState {
   location: UserLocation | null;

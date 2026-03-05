@@ -1,8 +1,6 @@
 "use client";
 
-import { useLanguage } from "@/lib/LanguageContext";
-import { t } from "@/lib/i18n";
-import { useHaptics } from "@/lib/haptics";
+import { useTranslation, useHaptics } from "best-time-ui";
 
 interface Props {
   duration: number;
@@ -10,7 +8,7 @@ interface Props {
 }
 
 export default function WalkSettings({ duration, onDurationChange }: Props) {
-  const { lang } = useLanguage();
+  const { t } = useTranslation();
   const { trigger } = useHaptics();
 
   return (
@@ -18,10 +16,10 @@ export default function WalkSettings({ duration, onDurationChange }: Props) {
       <div className="card px-6 py-5">
         <div className="flex items-center justify-between mb-3">
           <span className="font-mono text-xs text-cream/50 uppercase tracking-wider">
-            {t(lang, "walkDuration")}
+            {t("walkDuration")}
           </span>
           <span className="font-mono text-lg text-cream">
-            {duration} {t(lang, "minutes")}
+            {duration} {t("minutes")}
           </span>
         </div>
         <input

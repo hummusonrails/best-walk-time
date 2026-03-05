@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAlerts } from "@/lib/alertsCache";
-import { computeStats, getWalkRecommendation } from "@/lib/safety";
-import { filterAlertsByRegion } from "@/lib/regions";
+import { computeStats, filterAlertsByRegion } from "best-time-ui";
+import { getWalkRecommendation } from "@/lib/safety";
 import { getShelters } from "@/lib/sheltersCache";
 import { findNearestShelters } from "@/lib/geo";
 
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   const alerts = await getAlerts();
 
   const filtered = city
-    ? alerts.filter((a) => a.cities.some((c) => c.includes(city)))
+    ? alerts.filter((a) => a.cities.some((c: string) => c.includes(city)))
     : alerts.filter((a) => filterAlertsByRegion(a.cities, region));
 
   const stats = computeStats(filtered);

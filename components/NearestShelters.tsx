@@ -1,7 +1,6 @@
 "use client";
 
-import { useLanguage } from "@/lib/LanguageContext";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "best-time-ui";
 import { NearestShelter } from "@/lib/types";
 import { formatDistance } from "@/lib/geo";
 
@@ -12,14 +11,14 @@ interface Props {
 }
 
 export default function NearestShelters({ shelters, loading, coverage }: Props) {
-  const { lang } = useLanguage();
+  const { t } = useTranslation();
 
   if (loading) {
     return (
       <section className="w-full max-w-md mx-auto px-4">
         <div className="card px-5 py-5">
           <span className="font-mono text-xs text-cream/40 uppercase tracking-wider block mb-3">
-            {t(lang, "shelters")}
+            {t("shelters")}
           </span>
           <div className="animate-pulse space-y-3">
             {[0, 1, 2].map((i) => (
@@ -36,10 +35,10 @@ export default function NearestShelters({ shelters, loading, coverage }: Props) 
       <section className="w-full max-w-md mx-auto px-4">
         <div className="card px-5 py-5">
           <span className="font-mono text-xs text-cream/40 uppercase tracking-wider block mb-3">
-            {t(lang, "shelters")}
+            {t("shelters")}
           </span>
           <p className="font-mono text-sm text-cream/30 text-center py-2">
-            {t(lang, "noShelters")}
+            {t("noShelters")}
           </p>
         </div>
       </section>
@@ -50,7 +49,7 @@ export default function NearestShelters({ shelters, loading, coverage }: Props) 
     <section className="w-full max-w-md mx-auto px-4">
       <div className="card px-5 py-5">
         <span className="font-mono text-xs text-cream/40 uppercase tracking-wider block mb-3">
-          {t(lang, "shelters")}
+          {t("shelters")}
         </span>
         <div className="space-y-2">
           {shelters.map((shelter, i) => (
@@ -69,7 +68,7 @@ export default function NearestShelters({ shelters, loading, coverage }: Props) 
                 </span>
                 <div>
                   <p className="font-mono text-sm text-cream/80 group-hover:text-cream transition-colors">
-                    {shelter.name || shelter.address || `${t(lang, "nearestShelter")} #${i + 1}`}
+                    {shelter.name || shelter.address || `${t("nearestShelter")} #${i + 1}`}
                   </p>
                   {shelter.address && shelter.name && (
                     <p className="font-mono text-xs text-cream/30">{shelter.address}</p>
@@ -81,7 +80,7 @@ export default function NearestShelters({ shelters, loading, coverage }: Props) 
                   {formatDistance(shelter.distanceM)}
                 </span>
                 <span className="font-mono text-xs text-cream/30">
-                  {shelter.walkMinutes} {t(lang, "minutes")} {t(lang, "walkTime")}
+                  {shelter.walkMinutes} {t("minutes")} {t("walkTime")}
                 </span>
               </div>
             </a>
@@ -89,7 +88,7 @@ export default function NearestShelters({ shelters, loading, coverage }: Props) 
         </div>
         {coverage && !coverage.covered && (
           <p className="font-mono text-xs text-cream/30 text-center mt-3 leading-relaxed">
-            {t(lang, "shelterLimitedCoverage")}
+            {t("shelterLimitedCoverage")}
           </p>
         )}
       </div>

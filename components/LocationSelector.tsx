@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLanguage } from "@/lib/LanguageContext";
-import { t } from "@/lib/i18n";
-import { regions, Region } from "@/lib/regions";
-import { useHaptics } from "@/lib/haptics";
+import { useLanguage, useTranslation, useHaptics, regions, type Region } from "best-time-ui";
 
 interface Props {
   selectedRegion: string;
@@ -18,6 +15,7 @@ export default function LocationSelector({
   autoDetected = false,
 }: Props) {
   const { lang } = useLanguage();
+  const { t } = useTranslation();
   const { trigger } = useHaptics();
   const [expanded, setExpanded] = useState(false);
 
@@ -29,7 +27,7 @@ export default function LocationSelector({
       <section className="w-full max-w-md mx-auto px-4">
         <div className="card px-5 py-5">
           <span className="font-mono text-xs text-cream/40 uppercase tracking-wider block mb-3">
-            {t(lang, "region")}
+            {t("region")}
           </span>
           <div className="flex items-center gap-2">
             <span className="font-mono text-sm text-cream">
@@ -39,7 +37,7 @@ export default function LocationSelector({
               onClick={() => setExpanded(true)}
               className="font-mono text-xs text-cream/40 hover:text-cream/70 underline underline-offset-2 transition-colors duration-300"
             >
-              {t(lang, "regionChange")}
+              {t("regionChange")}
             </button>
           </div>
         </div>
@@ -51,7 +49,7 @@ export default function LocationSelector({
     <section className="w-full max-w-md mx-auto px-4">
       <div className="card px-5 py-5">
         <span className="font-mono text-xs text-cream/40 uppercase tracking-wider block mb-3">
-          {t(lang, "region")}
+          {t("region")}
         </span>
 
         <div className="flex flex-wrap gap-2">

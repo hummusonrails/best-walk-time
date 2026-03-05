@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, JetBrains_Mono, Inter } from "next/font/google";
-import { LanguageProvider } from "@/lib/LanguageContext";
+import { I18nProvider } from "best-time-ui";
+import { translations } from "@/lib/i18n";
 import Script from "next/script";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import "./globals.css";
@@ -115,7 +116,9 @@ export default function RootLayout({
       <body
         className={`${cormorant.variable} ${jetbrains.variable} ${inter.variable} antialiased`}
       >
-        <LanguageProvider>{children}</LanguageProvider>
+        <I18nProvider translations={translations} storageKey="bwt-lang">
+          {children}
+        </I18nProvider>
         <ServiceWorkerRegistration />
         <Script
           data-goatcounter="https://bestwalkingtime.goatcounter.com/count"

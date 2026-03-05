@@ -1,23 +1,31 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Header from "@/components/Header";
-import SafetyVerdict from "@/components/SafetyVerdict";
+import {
+  Header,
+  SafetyVerdict,
+  InstallPrompt,
+  StatsGrid,
+  AlertTimeline,
+  HowItWorks,
+  Footer,
+  ScrollReveal,
+  CrossPromoBanner,
+  computeStats,
+  filterAlertsByRegion,
+  detectRegionFromCoordinates,
+  regions,
+  type ProcessedAlert,
+  type SafetyStats,
+  type SafetyRecommendation,
+} from "best-time-ui";
 import WalkSettings from "@/components/WalkSettings";
 import LocationDisplay from "@/components/LocationDisplay";
 import NearestShelters from "@/components/NearestShelters";
 import LocationSelector from "@/components/LocationSelector";
-import StatsGrid from "@/components/StatsGrid";
-import AlertTimeline from "@/components/AlertTimeline";
-import HowItWorks from "@/components/HowItWorks";
-import Footer from "@/components/Footer";
-import InstallPrompt from "@/components/InstallPrompt";
-import ScrollReveal from "@/components/ScrollReveal";
-import CrossPromoBanner from "@/components/CrossPromoBanner";
-import { ProcessedAlert, SafetyStats, SafetyRecommendation, NearestShelter as NearestShelterType } from "@/lib/types";
-import { computeStats, getWalkRecommendation } from "@/lib/safety";
-import { filterAlertsByRegion, detectRegionFromCoordinates, regions } from "@/lib/regions";
+import { getWalkRecommendation } from "@/lib/safety";
 import { useGeolocation } from "@/hooks/useGeolocation";
+import { NearestShelter as NearestShelterType } from "@/lib/types";
 
 const REFRESH_INTERVAL = 30_000;
 
@@ -121,7 +129,12 @@ export default function Home() {
         <ScrollReveal direction="down">
           <Header />
         </ScrollReveal>
-        <CrossPromoBanner />
+        <CrossPromoBanner
+          href="https://bestshowertime.com"
+          name="Best Shower Time"
+          promptEn="Need a shower? Check out"
+          promptHe="צריכים להתקלח? בדקו את"
+        />
 
         <main className="flex flex-col items-center gap-10 pb-10">
           <ScrollReveal>
@@ -173,7 +186,14 @@ export default function Home() {
         </main>
 
         <ScrollReveal>
-          <Footer lastUpdated={lastUpdated} />
+          <Footer
+            lastUpdated={lastUpdated}
+            sisterSite={{
+              href: "https://bestshowertime.com",
+              nameEn: "Best Shower Time",
+              nameHe: "הזמן הטוב למקלחת",
+            }}
+          />
         </ScrollReveal>
       </div>
     </div>

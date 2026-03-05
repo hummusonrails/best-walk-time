@@ -1,32 +1,10 @@
-import { Language } from "./types";
+import { sharedTranslations, mergeTranslations, type Translations } from "best-time-ui";
 
-const translations = {
+const siteTranslations: Translations = {
   en: {
     appName: "Best Walk Time",
     appNameSub: "הזמן הטוב לטיול",
-    minutes: "min",
-    timeSinceLastAlert: "Time Since Last Alert",
-    averageGap: "Average Gap (6h)",
-    alertCount: "Alerts (24h)",
-    trendLabel: "Trend",
-    increasing: "Increasing",
-    decreasing: "Decreasing",
-    stable: "Stable",
-    safetyScore: "Safety Score",
-    timeline: "24-Hour Alert Timeline",
-    howItWorks: "How It Works",
-    howItWorksContent:
-      "This app analyzes real-time rocket alert data from Pikud HaOref combined with public bomb shelter locations to estimate the safest times for a walk. The safety score factors in time since the last alert, alert frequency trends, and your distance to the nearest public shelter.",
-    disclaimer:
-      "This is not a substitute for Pikud HaOref guidelines. Always follow official instructions.",
-    dataSource: "Alert data: Tzeva Adom / Pikud HaOref — Shelter data: Municipal open data (TLV, Haifa, Jerusalem, Beer Sheva) + OpenStreetMap",
-    shelterLimitedCoverage: "Shelter data is currently available for Tel Aviv, Haifa, Jerusalem, and Beer Sheva. Shelters shown for other areas are from OpenStreetMap and may be incomplete.",
-    lastUpdated: "Last updated",
-    autoRefresh: "Auto-refreshes every 30s",
-    noAlerts: "No recent alerts",
     walkDuration: "Walk Duration",
-    now: "Now",
-    alerts: "alerts",
     location: "Your Location",
     locateMe: "Locate me",
     locating: "Locating...",
@@ -37,40 +15,17 @@ const translations = {
     noShelters: "No shelter data available",
     loadingShelters: "Loading shelters...",
     walkTime: "walk",
-    searchCity: "Search city...",
     region: "Region",
     regionChange: "change",
-    installCTAiOS: "Tap {icon} then \"Add to Home Screen\" — always one tap away",
-    installCTAAndroid: "Tap \u22EE then \"Install App\" — always one tap away",
-    installCTADesktop: "Install on your phone — always one tap away from a safety check",
-    installButton: "Install App",
+    dataSource: "Alert data: Tzeva Adom / Pikud HaOref — Shelter data: Municipal open data (TLV, Haifa, Jerusalem, Beer Sheva) + OpenStreetMap",
+    shelterLimitedCoverage: "Shelter data is currently available for Tel Aviv, Haifa, Jerusalem, and Beer Sheva. Shelters shown for other areas are from OpenStreetMap and may be incomplete.",
+    howItWorksContent:
+      "This app analyzes real-time rocket alert data from Pikud HaOref combined with public bomb shelter locations to estimate the safest times for a walk. The safety score factors in time since the last alert, alert frequency trends, and your distance to the nearest public shelter.",
   },
   he: {
     appName: "הזמן הטוב לטיול",
     appNameSub: "Best Walk Time",
-    minutes: "דק׳",
-    timeSinceLastAlert: "זמן מאז ההתרעה האחרונה",
-    averageGap: "מרווח ממוצע (6 שעות)",
-    alertCount: "התרעות (24 שעות)",
-    trendLabel: "מגמה",
-    increasing: "עולה",
-    decreasing: "יורדת",
-    stable: "יציבה",
-    safetyScore: "ציון בטיחות",
-    timeline: "ציר זמן התרעות — 24 שעות",
-    howItWorks: "איך זה עובד",
-    howItWorksContent:
-      "האפליקציה מנתחת נתוני התרעות בזמן אמת מפיקוד העורף בשילוב מיקומי מקלטים ציבוריים כדי להעריך את הזמנים הבטוחים ביותר לטיול. ציון הבטיחות מבוסס על הזמן מאז ההתרעה האחרונה, מגמות תדירות, והמרחק שלך מהמקלט הציבורי הקרוב.",
-    disclaimer:
-      "אפליקציה זו אינה תחליף להנחיות פיקוד העורף. פעלו תמיד לפי ההוראות הרשמיות.",
-    dataSource: "נתוני התרעות: צבע אדום / פיקוד העורף — מקלטים: נתונים פתוחים עירוניים (ת״א, חיפה, י-ם, ב״ש) + OpenStreetMap",
-    shelterLimitedCoverage: "נתוני מקלטים זמינים כרגע לתל אביב, חיפה, ירושלים ובאר שבע. מקלטים באזורים אחרים מבוססים על OpenStreetMap ועשויים להיות חלקיים.",
-    lastUpdated: "עודכן לאחרונה",
-    autoRefresh: "מתרענן אוטומטית כל 30 שניות",
-    noAlerts: "אין התרעות אחרונות",
     walkDuration: "משך הטיול",
-    now: "עכשיו",
-    alerts: "התרעות",
     location: "המיקום שלך",
     locateMe: "אתר אותי",
     locating: "מאתר...",
@@ -81,20 +36,13 @@ const translations = {
     noShelters: "אין נתוני מקלטים",
     loadingShelters: "טוען מקלטים...",
     walkTime: "הליכה",
-    searchCity: "חפש עיר...",
     region: "אזור",
     regionChange: "שנה",
-    installCTAiOS: "לחצו על {icon} ואז \"הוסף למסך הבית\" — תמיד במרחק נגיעה",
-    installCTAAndroid: "לחצו על \u22EE ואז \"התקן אפליקציה\" — תמיד במרחק נגיעה",
-    installCTADesktop: "התקינו בטלפון — תמיד במרחק נגיעה מבדיקת בטיחות",
-    installButton: "התקן אפליקציה",
+    dataSource: "נתוני התרעות: צבע אדום / פיקוד העורף — מקלטים: נתונים פתוחים עירוניים (ת״א, חיפה, י-ם, ב״ש) + OpenStreetMap",
+    shelterLimitedCoverage: "נתוני מקלטים זמינים כרגע לתל אביב, חיפה, ירושלים ובאר שבע. מקלטים באזורים אחרים מבוססים על OpenStreetMap ועשויים להיות חלקיים.",
+    howItWorksContent:
+      "האפליקציה מנתחת נתוני התרעות בזמן אמת מפיקוד העורף בשילוב מיקומי מקלטים ציבוריים כדי להעריך את הזמנים הבטוחים ביותר לטיול. ציון הבטיחות מבוסס על הזמן מאז ההתרעה האחרונה, מגמות תדירות, והמרחק שלך מהמקלט הציבורי הקרוב.",
   },
-} as const;
+};
 
-export type TranslationKey = keyof (typeof translations)["en"];
-
-export function t(lang: Language, key: TranslationKey): string {
-  return translations[lang][key];
-}
-
-export default translations;
+export const translations = mergeTranslations(sharedTranslations, siteTranslations);
