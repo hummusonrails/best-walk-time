@@ -130,10 +130,10 @@ export default function Home() {
           <Header />
         </ScrollReveal>
         <CrossPromoBanner
-          href="https://bestshowertime.com"
-          name="Best Shower Time"
-          promptEn="Need a shower? Check out"
-          promptHe="צריכים להתקלח? בדקו את"
+          sites={[
+            { href: "https://bestshowertime.com", name: "Best Shower Time", promptEn: "Need a shower? Check out", promptHe: "צריכים להתקלח? בדקו את" },
+            { href: "https://bestsleepingtime.com", name: "Best Sleep Time", promptEn: "Need a nap? Check out", promptHe: "צריכים תנומה? בדקו את" },
+          ]}
         />
 
         <main className="flex flex-col items-center gap-10 pb-10">
@@ -188,11 +188,18 @@ export default function Home() {
         <ScrollReveal>
           <Footer
             lastUpdated={lastUpdated}
-            sisterSite={{
-              href: "https://bestshowertime.com",
-              nameEn: "Best Shower Time",
-              nameHe: "הזמן הטוב למקלחת",
-            }}
+            sisterSites={[
+              {
+                href: "https://bestshowertime.com",
+                nameEn: "Best Shower Time",
+                nameHe: "הזמן הטוב למקלחת",
+              },
+              {
+                href: "https://bestsleepingtime.com",
+                nameEn: "Best Sleep Time",
+                nameHe: "הזמן הטוב לתנומה",
+              },
+            ]}
           />
         </ScrollReveal>
       </div>
