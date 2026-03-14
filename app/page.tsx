@@ -27,7 +27,7 @@ import { getWalkRecommendation } from "@/lib/safety";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { NearestShelter as NearestShelterType } from "@/lib/types";
 
-const REFRESH_INTERVAL = 30_000;
+const REFRESH_INTERVAL = 120_000;
 
 export default function Home() {
   const [alerts, setAlerts] = useState<ProcessedAlert[]>([]);

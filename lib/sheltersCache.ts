@@ -1,7 +1,10 @@
 import { Shelter } from "./types";
 
 let cache: { data: Shelter[]; timestamp: number } | null = null;
-const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
+// Shelter locations are essentially static — they don't move.
+// Future improvement: pre-generate this as static JSON at build time
+// to avoid runtime fetches entirely.
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 // Coverage bounds for each municipal data source
 export const COVERAGE_AREAS = [
