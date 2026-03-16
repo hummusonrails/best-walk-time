@@ -1,5 +1,4 @@
 import { type ProcessedAlert } from "best-time-ui";
-import { createClient } from "@libsql/client/http";
 
 let cache: { data: ProcessedAlert[]; timestamp: number } | null = null;
 const CACHE_DURATION = 60 * 1000; // 60 seconds
@@ -59,12 +58,13 @@ async function fetchFromTzevaAdom(): Promise<ProcessedAlert[]> {
 }
 
 async function fetchFromTurso(): Promise<ProcessedAlert[]> {
-  const url = process.env.TURSO_DB_URL;
+  const rawUrl = process.env.TURSO_DB_URL;
   const token = process.env.TURSO_AUTH_TOKEN;
-  if (!url || !token) return [];
+  if (!rawUrl || !token) return [];
 
+  const { createClient } = await import("@libsql/client/http");
   const db = createClient({
-    url: url.replace("libsql://", "https://"),
+    url: rawUrl.trim().replace("libsql://", "https://"),
     authToken: token.trim(),
   });
 
