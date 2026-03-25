@@ -182,14 +182,6 @@ export default function Home() {
               )}
             </div>
           </ScrollReveal>
-          {preAlertStatus && (
-            <ScrollReveal>
-              <PreAlertCard
-                preAlertStatus={preAlertStatus}
-                preAlerts={preAlerts}
-              />
-            </ScrollReveal>
-          )}
           {preAlertStatus && preAlertStatus.warningCount2h >= 2 && (
             <div className="w-full px-4 py-3 rounded-lg bg-amber-900/30 border border-amber-600/40 text-amber-200 text-sm text-center">
               {t("prealert.shorterWalk")}
@@ -239,8 +231,16 @@ export default function Home() {
           <ScrollReveal delay={150} className="w-full">
             <StatsGrid stats={stats} />
           </ScrollReveal>
+          {preAlertStatus && (
+            <ScrollReveal>
+              <PreAlertCard
+                preAlertStatus={preAlertStatus}
+                preAlerts={preAlerts}
+              />
+            </ScrollReveal>
+          )}
           <ScrollReveal delay={100} className="w-full">
-            <AlertTimeline alerts={filteredAlerts} />
+            <AlertTimeline alerts={filteredAlerts} preAlerts={preAlerts} />
           </ScrollReveal>
           <ScrollReveal>
             <HowItWorks />
