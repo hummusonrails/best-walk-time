@@ -1,4 +1,4 @@
-import { type SafetyStats, type SafetyLevel, type SafetyRecommendation } from "best-time-ui";
+import { type SafetyStats, type SafetyLevel, type SafetyRecommendation, type PreAlertStatus } from "best-time-ui";
 import { NearestShelter } from "./types";
 
 export function computeWalkScore(
@@ -27,22 +27,38 @@ export function computeWalkScore(
 export function getWalkRecommendation(
   stats: SafetyStats,
   walkDuration: number,
-  nearestShelter: NearestShelter | null
+  nearestShelter: NearestShelter | null,
+  preAlertStatus?: PreAlertStatus | null
 ): SafetyRecommendation {
   const baseWalkScore = computeWalkScore(stats.safetyScore, nearestShelter);
   const { timeSinceLastAlert, averageGap } = stats;
 
   const durationPenalty = 1 - (walkDuration - 5) * 0.005;
-  const durationFactor = Math.max(0.7, Math.min(1.0, durationPenalty));
+  let durationFactor = Math.max(0.7, Math.min(1.0, durationPenalty));
+
+  // If pre-alerts show recent warning activity, penalize longer walks more heavily
+  if (preAlertStatus && preAlertStatus.warningCount2h >= 2 && walkDuration > 20) {
+    durationFactor *= 1.5;
+    // Re-clamp after multiplier — lower bound shifts down for longer walks under warning
+    durationFactor = Math.max(0.5, Math.min(1.0, durationFactor));
+  }
 
   const timeRatio = timeSinceLastAlert / Math.max(walkDuration, 1);
   const gapRatio = averageGap === Infinity ? 10 : averageGap / Math.max(walkDuration, 1);
 
   const timeBonus = Math.min(15, (timeRatio - 1) * 3);
   const gapBonus = Math.min(10, (gapRatio - 1) * 5);
-  const walkScore = Math.round(
+  let walkScore = Math.round(
     Math.max(0, Math.min(100, baseWalkScore * durationFactor + timeBonus + gapBonus))
   );
+
+  // Departure window bonus: recent exit with no active warning
+  if (preAlertStatus?.hasRecentExit && !preAlertStatus.hasActiveWarning) {
+    // If the average gap comfortably exceeds walk duration, bump score slightly
+    if (averageGap !== Infinity && averageGap > walkDuration * 1.5) {
+      walkScore = Math.min(100, walkScore + 5);
+    }
+  }
 
   const hasShelterData = nearestShelter && nearestShelter.distanceM < 5000;
   const shelterNearby = nearestShelter && nearestShelter.distanceM < 500;

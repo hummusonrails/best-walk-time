@@ -21,6 +21,8 @@ const siteTranslations: Translations = {
     shelterLimitedCoverage: "Shelter data is currently available for Tel Aviv, Haifa, Jerusalem, and Beer Sheva. Shelters shown for other areas are from OpenStreetMap and may be incomplete.",
     howItWorksContent:
       "This app analyzes real-time rocket alert data from Pikud HaOref combined with public bomb shelter locations to estimate the safest times for a walk. The safety score factors in time since the last alert, alert frequency trends, and your distance to the nearest public shelter.",
+    "prealert.shorterWalk": "Recent warning activity — consider a shorter walk or staying closer to shelter",
+    "prealert.departureWindow": "Event concluded — estimated {gap}min window. Your walk: {duration}min",
   },
   he: {
     appName: "הזמן הטוב לטיול",
@@ -42,6 +44,8 @@ const siteTranslations: Translations = {
     shelterLimitedCoverage: "נתוני מקלטים זמינים כרגע לתל אביב, חיפה, ירושלים ובאר שבע. מקלטים באזורים אחרים מבוססים על OpenStreetMap ועשויים להיות חלקיים.",
     howItWorksContent:
       "האפליקציה מנתחת נתוני התרעות בזמן אמת מפיקוד העורף בשילוב מיקומי מקלטים ציבוריים כדי להעריך את הזמנים הבטוחים ביותר לטיול. ציון הבטיחות מבוסס על הזמן מאז ההתרעה האחרונה, מגמות תדירות, והמרחק שלך מהמקלט הציבורי הקרוב.",
+    "prealert.shorterWalk": "פעילות אזהרה לאחרונה — שקלו הליכה קצרה יותר או להישאר קרוב למקלט",
+    "prealert.departureWindow": "האירוע הסתיים — חלון משוער של {gap} דקות. ההליכה שלכם: {duration} דקות",
   },
 };
 
