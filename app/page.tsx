@@ -6,7 +6,6 @@ import {
   SafetyVerdict,
   InstallPrompt,
   StatsGrid,
-  AlertTimeline,
   HowItWorks,
   Footer,
   ScrollReveal,
@@ -27,6 +26,10 @@ import WalkSettings from "@/components/WalkSettings";
 import LocationDisplay from "@/components/LocationDisplay";
 import NearestShelters from "@/components/NearestShelters";
 import LocationSelector from "@/components/LocationSelector";
+import PreAlertStatusCard from "@/components/PreAlertStatusCard";
+import PreAlertStatsRow from "@/components/PreAlertStatsRow";
+import AlertTimelineWithPreAlerts from "@/components/AlertTimelineWithPreAlerts";
+import ShelterPreAlertWarning from "@/components/ShelterPreAlertWarning";
 import { getWalkRecommendation } from "@/lib/safety";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { NearestShelter as NearestShelterType } from "@/lib/types";
@@ -169,8 +172,27 @@ export default function Home() {
 
         <main className="flex flex-col items-center gap-10 pb-10">
           <ScrollReveal>
-            <SafetyVerdict recommendation={recommendation} />
+            <div className="flex flex-col items-center">
+              <SafetyVerdict recommendation={recommendation} />
+              {preAlertStatus && (
+                <div className="flex items-center gap-1.5 mt-[-8px]">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400/70" />
+                  <span className="font-mono text-[10px] text-amber-300/50 uppercase tracking-wider">
+                    {t("prealert.includesIntel")}
+                  </span>
+                </div>
+              )}
+            </div>
           </ScrollReveal>
+          {preAlertStatus && (
+            <ScrollReveal>
+              <PreAlertStatusCard
+                preAlertStatus={preAlertStatus}
+                stats={stats}
+                duration={duration}
+              />
+            </ScrollReveal>
+          )}
           {preAlertStatus && preAlertStatus.warningCount2h >= 2 && (
             <div className="w-full px-4 py-3 rounded-lg bg-amber-900/30 border border-amber-600/40 text-amber-200 text-sm text-center">
               {t("prealert.shorterWalk")}
@@ -207,6 +229,14 @@ export default function Home() {
               />
             </ScrollReveal>
           )}
+          {preAlertStatus && nearbyShelters.length > 0 && (
+            <ScrollReveal delay={100}>
+              <ShelterPreAlertWarning
+                preAlertStatus={preAlertStatus}
+                nearestShelter={nearbyShelters[0]}
+              />
+            </ScrollReveal>
+          )}
           <ScrollReveal direction="right" delay={50}>
             <InstallPrompt />
           </ScrollReveal>
@@ -220,8 +250,11 @@ export default function Home() {
           <ScrollReveal delay={150} className="w-full">
             <StatsGrid stats={stats} />
           </ScrollReveal>
+          {preAlertStatus && (
+            <PreAlertStatsRow preAlertStatus={preAlertStatus} />
+          )}
           <ScrollReveal delay={100} className="w-full">
-            <AlertTimeline alerts={filteredAlerts} />
+            <AlertTimelineWithPreAlerts alerts={filteredAlerts} preAlerts={preAlerts} />
           </ScrollReveal>
           <ScrollReveal>
             <HowItWorks />
