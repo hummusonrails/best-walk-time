@@ -12,12 +12,16 @@ import {
   ScrollReveal,
   CrossPromoBanner,
   computeStats,
+  computePreAlertStatus,
   filterAlertsByRegion,
   detectRegionFromCoordinates,
   regions,
+  useTranslation,
   type ProcessedAlert,
   type SafetyStats,
   type SafetyRecommendation,
+  type PreAlert,
+  type PreAlertStatus,
 } from "best-time-ui";
 import WalkSettings from "@/components/WalkSettings";
 import LocationDisplay from "@/components/LocationDisplay";
@@ -31,6 +35,8 @@ const REFRESH_INTERVAL = 120_000;
 
 export default function Home() {
   const [alerts, setAlerts] = useState<ProcessedAlert[]>([]);
+  const [preAlerts, setPreAlerts] = useState<PreAlert[]>([]);
+  const [preAlertStatus, setPreAlertStatus] = useState<PreAlertStatus | null>(null);
   const [stats, setStats] = useState<SafetyStats | null>(null);
   const [recommendation, setRecommendation] = useState<SafetyRecommendation | null>(null);
   const [duration, setDuration] = useState(15);
@@ -40,6 +46,7 @@ export default function Home() {
   const [sheltersLoading, setSheltersLoading] = useState(false);
   const [shelterCoverage, setShelterCoverage] = useState<{ covered: boolean; area?: string } | null>(null);
   const [regionAutoDetected, setRegionAutoDetected] = useState(false);
+  const { t } = useTranslation();
 
   const { location, loading: geoLoading, error: geoError, requestLocation } = useGeolocation();
 
@@ -107,21 +114,45 @@ export default function Home() {
     }
   }, []);
 
+  const fetchPreAlerts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/pre-alerts");
+      const data: PreAlert[] = await res.json();
+      setPreAlerts(data);
+    } catch {
+      // Pre-alerts are optional — fail silently
+    }
+  }, []);
+
   // Initial fetch + polling
   useEffect(() => {
     fetchAlerts();
-    const interval = setInterval(fetchAlerts, REFRESH_INTERVAL);
+    fetchPreAlerts();
+    const interval = setInterval(() => {
+      fetchAlerts();
+      fetchPreAlerts();
+    }, REFRESH_INTERVAL);
     return () => clearInterval(interval);
-  }, [fetchAlerts]);
+  }, [fetchAlerts, fetchPreAlerts]);
 
-  // Recompute stats when filtered alerts, duration, or shelters change
+  // Compute pre-alert status when pre-alerts or region change
+  useEffect(() => {
+    if (preAlerts.length === 0) {
+      setPreAlertStatus(null);
+      return;
+    }
+    const regionId = selectedRegion === "all" ? null : selectedRegion;
+    setPreAlertStatus(computePreAlertStatus(preAlerts, regionId));
+  }, [preAlerts, selectedRegion]);
+
+  // Recompute stats when filtered alerts, duration, shelters, or pre-alert status change
   useEffect(() => {
     const newStats = computeStats(filteredAlerts);
     setStats(newStats);
 
     const nearestShelter = nearbyShelters.length > 0 ? nearbyShelters[0] : null;
-    setRecommendation(getWalkRecommendation(newStats, duration, nearestShelter));
-  }, [filteredAlerts, duration, nearbyShelters]);
+    setRecommendation(getWalkRecommendation(newStats, duration, nearestShelter, preAlertStatus));
+  }, [filteredAlerts, duration, nearbyShelters, preAlertStatus]);
 
   return (
     <div className="min-h-screen flex flex-col items-center">
@@ -140,6 +171,18 @@ export default function Home() {
           <ScrollReveal>
             <SafetyVerdict recommendation={recommendation} />
           </ScrollReveal>
+          {preAlertStatus && preAlertStatus.warningCount2h >= 2 && (
+            <div className="w-full px-4 py-3 rounded-lg bg-amber-900/30 border border-amber-600/40 text-amber-200 text-sm text-center">
+              {t("prealert.shorterWalk")}
+            </div>
+          )}
+          {preAlertStatus && preAlertStatus.hasRecentExit && !preAlertStatus.hasActiveWarning && stats && (
+            <div className="w-full px-4 py-3 rounded-lg bg-emerald-900/30 border border-emerald-600/40 text-emerald-200 text-sm text-center">
+              {t("prealert.departureWindow")
+                .replace("{gap}", stats.averageGap === Infinity ? "—" : String(Math.round(stats.averageGap)))
+                .replace("{duration}", String(duration))}
+            </div>
+          )}
           <ScrollReveal direction="left" delay={100}>
             <WalkSettings
               duration={duration}
