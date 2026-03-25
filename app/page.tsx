@@ -6,6 +6,7 @@ import {
   SafetyVerdict,
   InstallPrompt,
   StatsGrid,
+  AlertTimeline,
   HowItWorks,
   Footer,
   ScrollReveal,
@@ -26,10 +27,7 @@ import WalkSettings from "@/components/WalkSettings";
 import LocationDisplay from "@/components/LocationDisplay";
 import NearestShelters from "@/components/NearestShelters";
 import LocationSelector from "@/components/LocationSelector";
-import PreAlertStatusCard from "@/components/PreAlertStatusCard";
-import PreAlertStatsRow from "@/components/PreAlertStatsRow";
-import AlertTimelineWithPreAlerts from "@/components/AlertTimelineWithPreAlerts";
-import ShelterPreAlertWarning from "@/components/ShelterPreAlertWarning";
+import { PreAlertCard } from "best-time-ui";
 import { getWalkRecommendation } from "@/lib/safety";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { NearestShelter as NearestShelterType } from "@/lib/types";
@@ -186,10 +184,9 @@ export default function Home() {
           </ScrollReveal>
           {preAlertStatus && (
             <ScrollReveal>
-              <PreAlertStatusCard
+              <PreAlertCard
                 preAlertStatus={preAlertStatus}
-                stats={stats}
-                duration={duration}
+                preAlerts={preAlerts}
               />
             </ScrollReveal>
           )}
@@ -229,14 +226,6 @@ export default function Home() {
               />
             </ScrollReveal>
           )}
-          {preAlertStatus && nearbyShelters.length > 0 && (
-            <ScrollReveal delay={100}>
-              <ShelterPreAlertWarning
-                preAlertStatus={preAlertStatus}
-                nearestShelter={nearbyShelters[0]}
-              />
-            </ScrollReveal>
-          )}
           <ScrollReveal direction="right" delay={50}>
             <InstallPrompt />
           </ScrollReveal>
@@ -250,11 +239,8 @@ export default function Home() {
           <ScrollReveal delay={150} className="w-full">
             <StatsGrid stats={stats} />
           </ScrollReveal>
-          {preAlertStatus && (
-            <PreAlertStatsRow preAlertStatus={preAlertStatus} />
-          )}
           <ScrollReveal delay={100} className="w-full">
-            <AlertTimelineWithPreAlerts alerts={filteredAlerts} preAlerts={preAlerts} />
+            <AlertTimeline alerts={filteredAlerts} />
           </ScrollReveal>
           <ScrollReveal>
             <HowItWorks />
